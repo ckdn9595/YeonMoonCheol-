@@ -36,7 +36,9 @@ if 'agree' not in st.session_state:
 # 1화면
 # 새로운 입력 필드를 추가하는 함수
 
-#채팅 출력용 정규화 함수
+# 채팅 출력용 정규화 함수
+
+
 def remove_pattern(text):
     pattern = r'\d+번째 채팅\s+\S+\s+:'  # 숫자, "번째 채팅", 공백, 이름(공백이 없는 문자열), 공백, 콜론
     cleaned_text = re.sub(pattern, '', text)
@@ -62,20 +64,18 @@ def ui_reset_button():
             st.session_state.person2 = ""
 
 
-
 def ui_verify_button():
-    col1, col2, col3 = st.columns([2.25, 2, 1])
-    with col2:
-
-        # 버튼 생성
-        if st.button('검증 하기'):
-            print(st.session_state.conversations)
-            with st.spinner("사건 정리중.."):
-                st.session_state.summary_data = summary_prompting(
-                    st.session_state.conversations)
-                st.session_state.step = 3
+    # 버튼 생성
+    if st.button('검증 하기'):
+        print(st.session_state.conversations)
+        with st.spinner("사건 정리중.."):
+            st.session_state.summary_data = summary_prompting(
+                st.session_state.conversations)
+            st.session_state.step = 3
 
             # 여기에 사건 프로프팅 들어가야함 곧 여기서 데이터 세팅
+
+
 def summary_prompting(data):
     data_string = ", ".join(data)
     chat_completion = client.chat.completions.create(
@@ -125,7 +125,8 @@ st.markdown(
 # SVG 이미지 표시
 with open("./assets/logo.svg", "r") as f:
     svg_content = f.read()
-st.markdown(f'<div style="padding: 1em; margin-left: 10%; margin-bottom:5%;"align="center">{svg_content}</div>', unsafe_allow_html=True)
+st.markdown(
+    f'<div style="padding: 1em; margin-left: 10%; margin-bottom:5%;"align="center">{svg_content}</div>', unsafe_allow_html=True)
 
 st.write("")
 st.write("")
@@ -157,7 +158,7 @@ elif st.session_state.step == 2:
     # 이름이 설정된 경우에만 대화 입력 UI 표시
     # 현재 입력 필드
     input_field = st.session_state.inputs[0]
-    
+
     with st.form(key='input_form'):
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
@@ -177,7 +178,6 @@ elif st.session_state.step == 2:
                 else:
                     st.warning("입력된 대화가 없습니다. 대화를 입력해주세요.")
 
-    
     ui_reset_button()
     # 저장된 대화 목록 표시
     if st.session_state.conversations:
@@ -190,8 +190,6 @@ elif st.session_state.step == 2:
         st.markdown(conversation_html, unsafe_allow_html=True)
     else:
         st.warning("입력값이 없습니다")
-        
-
 
     # 검증하기 버튼
     ui_verify_button()
@@ -256,7 +254,7 @@ elif st.session_state.step == 3:
 
 elif st.session_state.step == 4:
     verified_str = ", ".join(st.session_state.verified_sentences)
-    print(verified_str)
+
     st.write('본 판결서는 판결서 인터넷열람 사이트에서 열람/출력되었습니다. 본 판결서를 이용하여 사건관계인의 명예나 생활의 평온을 해하는 행위는 관련 법령에 따라 금지됩니다.')
     st.markdown("<h1 style='text-align: center;'>연 애 중 앙 지 방 법 원</h1>",
                 unsafe_allow_html=True)
@@ -300,7 +298,7 @@ elif st.session_state.step == 4:
 
     st.write("  ")
     st.write("  ")
-    
+
     # OpenAI API 호출
     response_reason = client.chat.completions.create(
         model="gpt-4",
@@ -318,7 +316,7 @@ elif st.session_state.step == 4:
 
     st.write("  ")
     st.write("  ")
-    
+
     st.markdown("<h3 style='text-align: center;'>이           유</h3>",
                 unsafe_allow_html=True)
 
@@ -330,7 +328,7 @@ elif st.session_state.step == 4:
     st.write("  ")
     st.write("  ")
     st.write("  ")
-    
+
     # 판결 이유에 대한 남자와 여자의 발생 횟수 카운트
     num_male_mistakes = result_reason.count('남자')
     num_female_mistakes = result_reason.count('여자')
@@ -403,14 +401,12 @@ st.markdown(
     .stCheckbox span {
         -webkit-transform: scale(1.3);
     }
-    .stButton {
+    .stButton{
         display: flex;
         flex-wrap: nowrap;
         justify-content: space-around;
     }
-    .stButton>button {
-        width: 30% !important;
-    }
+    
     .stButton>button, .stForm button {
         background-color: #FFFFFF;
         color: #FF0056;
@@ -472,9 +468,12 @@ st.markdown(
         height: 100%;  /* 컬럼의 높이를 맞추기 위해 필요할 수 있습니다 */
     }
     .st-emotion-cache-y2rhx3 {
-        padding: 5px 0 0 0
+        padding: 5px 0 0 0;
     }
-    
+    .element-container.st-emotion-cache-1aege4m button{
+        margin-top: 2rem;
+        width: 30% !important;
+    }
     </style>
     """,
     unsafe_allow_html=True
