@@ -1,6 +1,9 @@
 import os
 from openai import OpenAI
+from datetime import date
 import streamlit as st
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
 
 os.environ["OPENAI_API_KEY"] = st.secrets['API_KEY']
 client = OpenAI(
@@ -22,6 +25,8 @@ if 'person1' not in st.session_state:
 
 if 'person2' not in st.session_state:
     st.session_state.person2 = ""
+if 'verified_sentences' not in st.session_state:
+    st.session_state.verified_sentences = []
 
 # if 'summary_data' not in st.session_state:
 #     st.session_state.summary_data = ""
@@ -42,7 +47,10 @@ def ui_reset_button():
     with col2:
         if st.button('검증하기'):
             print(st.session_state.conversations)
-            st.session_state.step = 3
+            with st.spinner("사건 정리중.."):
+                st.session_state.summary_data = summary_prompting(
+                    st.session_state.conversations)
+                st.session_state.step = 3
 
             # 여기에 사건 프로프팅 들어가야함 곧 여기서 데이터 세팅
     with col3:
@@ -174,11 +182,10 @@ elif st.session_state.step == 2:
     ui_reset_button()
 
 elif st.session_state.step == 3:
-    with st.spinner("사건 정리중.."):
-        st.session_state.summary_data = summary_prompting(
-            st.session_state.conversations)
     # 줄 바꿈을 기준으로 문자열을 분리하여 배열로 저장
     sentences = st.session_state.summary_data.split('\n')
+    if sentences and sentences[-1] == '':
+        sentences.pop()
     print(sentences)
     agree = create_true_array(len(sentences))
     # datas = ["A가 저번 커플 모임 술자리에서 실수를 함",
@@ -226,10 +233,120 @@ elif st.session_state.step == 3:
         print(agree)
         for idx, data in enumerate(agree):
             if agree[idx]:
-                print(sentences[idx])
-                
-                
-                
+                st.session_state.verified_sentences.append(sentences[idx])
+        st.session_state.step = 4
+elif st.session_state.step == 4:
+    verified_str = ", ".join(st.session_state.verified_sentences)
+    print(verified_str)
+    st.markdown("<h1 style='text-align: center;'>연 애 중 앙 지 방 법 원</h1>",
+                unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'></h2>",
+                unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'></h2>",
+                unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center;'>판           결</h3>",
+                unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'></h2>",
+                unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.write("사    건")
+    with col2:
+        st.write("2024고정999 연애교통법위반(연인갈등)")
+
+    with col1:
+        st.write("피 고 인")
+    with col2:
+        st.write("남자", "여자")
+
+    with col1:
+        st.write("검    사")
+    with col2:
+        st.write("연문철(검사직무대리, 기소)\n연명원(공판)")
+
+    with col1:
+        st.write("변 호 인")
+    with col2:
+        st.write("법무법인(연애의 참견) 담당변호사 연문철")
+
+    with col1:
+        st.write("판결선고")
+    with col2:
+        today = date.today()
+        today_str = today.strftime("%Y-%m-%d")
+        st.write(today_str)
+
+    # OpenAI API 호출
+    response_reason = client.chat.completions.create(
+        model="gpt-4",
+        messages=[
+            {
+                "role": "user",
+                "content": f"{verified_str}"
+            },
+            {
+                "role": "system",
+                "content": "입력 받은 내용에 대한 연애전문가로서, 남자와 여자의 싸움의 판결문을 원만히 화해가 되도록 300자 이내로 작성해줘"
+            }
+        ]
+    )
+
+    st.markdown("<h3 style='text-align: center;'>이           유</h3>",
+                unsafe_allow_html=True)
+
+    # API 응답 출력
+    result_reason = response_reason.choices[0].message.content
+    st.write(result_reason)
+
+    # 판결 이유에 대한 남자와 여자의 발생 횟수 카운트
+    num_male_mistakes = result_reason.count('남자')
+    num_female_mistakes = result_reason.count('여자')
+
+    # 전체 문자 길이
+    total_characters = len(result_reason)
+
+    # 남자와 여자의 발생 횟수를 퍼센트로 계산
+    percent_male_mistakes = (num_male_mistakes / total_characters) * 100
+    percent_female_mistakes = (num_female_mistakes / total_characters) * 100
+
+    # 원형 그래프 그리기
+    labels = ['남자', '여자']
+    sizes = [percent_male_mistakes, percent_female_mistakes]
+    colors = ['#ff9999', '#66b3ff']
+    explode = (0.1, 0)  # 남자의 파이 조각을 살짝 분리
+
+    fig1, ax1 = plt.subplots(figsize=(2, 2))  # figsize를 사용하여 그래프 크기 조절
+    ax1.pie(sizes, explode=explode, labels=labels, colors=colors,
+            autopct='%1.1f%%', shadow=True, startangle=90, textprops={'fontsize': 10})
+    # Equal aspect ratio ensures that pie is drawn as a circle.
+    ax1.axis('equal')
+
+    st.subheader('판결 이유에 대한 남자와 여자의 잘못 비율 (%)')
+    st.pyplot(fig1)
+
+    st.markdown("<h3 style='text-align: center;'>결           론</h3>",
+                unsafe_allow_html=True)
+
+    # OpenAI API 호출
+    response_instruction = client.chat.completions.create(
+        model="gpt-4",
+        messages=[
+            {
+                "role": "user",
+                "content": f"{verified_str}"
+            },
+            {
+                "role": "system",
+                "content": "판결문에 대한 연인 사이의 간단하고 귀여운 벌칙을 3가지만 만들어주고, '피고인은' 으로 시작해서 '형에 처한다' 라는 양식에 맞게 작성해줘"
+            }
+        ]
+    )
+    # API 응답 출력
+    result_instruction = response_instruction.choices[0].message.content
+    st.write(result_instruction)
+
 # 스타일을 적용할 CSS 추가
 st.markdown(
     """
