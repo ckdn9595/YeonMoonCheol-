@@ -27,6 +27,8 @@ if 'person2' not in st.session_state:
     st.session_state.person2 = ""
 if 'verified_sentences' not in st.session_state:
     st.session_state.verified_sentences = []
+if 'agree' not in st.session_state:
+    st.session_state.agree = []
 
 def extract_name(chat_message):
     name_part = chat_message.split(':')[0]
@@ -54,15 +56,19 @@ def ui_reset_button():
             st.session_state.person1 = ""
             st.session_state.person2 = ""
 
+
+
 def ui_verify_button():
-    col1, col2, col3 = st.columns([2.25, 2, 1])
-    with col2:
-        if st.button('검증 하기'):
-            print(st.session_state.conversations)
-            with st.spinner("사건 정리중.."):
-                st.session_state.summary_data = summary_prompting(
-                    st.session_state.conversations)
-                st.session_state.step = 3
+    # 버튼 생성
+    if st.button('검증 하기'):
+        print(st.session_state.conversations)
+        with st.spinner("사건 정리중.."):
+            st.session_state.summary_data = summary_prompting(
+                st.session_state.conversations)
+            st.session_state.step = 3
+
+            # 여기에 사건 프로프팅 들어가야함 곧 여기서 데이터 세팅
+
 
 def summary_prompting(data):
     data_string = ", ".join(data)
@@ -119,24 +125,13 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 왼쪽과 오른쪽에 이미지를 배치
-left_image = st.empty()
-right_image = st.empty()
-
-# 이미지 파일 경로 설정
-left_image_path = "./assets/left_image.gif"
-right_image_path = "./assets/right_image.gif"
-
-with left_image:
-    st.markdown(f'<img src="{left_image_path}" class="left-image">', unsafe_allow_html=True)
-
-with right_image:
-    st.markdown(f'<img src="{right_image_path}" class="right-image">', unsafe_allow_html=True)
 
 # Streamlit 앱 레이아웃
 with open("./assets/logo.svg", "r") as f:
     svg_content = f.read()
-st.markdown(f'<div style="padding: 1em; margin-left: 10%; margin-bottom:5%;" align="center">{svg_content}</div>', unsafe_allow_html=True)
+
+st.markdown(
+    f'<div style="padding: 1em; margin-left: 10%; margin-bottom:5%;"align="center">{svg_content}</div>', unsafe_allow_html=True)
 
 st.write("")
 st.write("")
@@ -163,6 +158,7 @@ if st.session_state.step == 1:
                     st.warning("두 사람의 이름을 입력해주세요.")
 elif st.session_state.step == 2:
     input_field = st.session_state.inputs[0]
+
     with st.form(key='input_form'):
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
@@ -196,20 +192,29 @@ elif st.session_state.step == 2:
     else:
         st.warning("입력값이 없습니다")
 
+
     ui_verify_button()
 
 elif st.session_state.step == 3:
     sentences = st.session_state.summary_data.split('\n')
     if sentences and sentences[-1] == '':
         sentences.pop()
-    print(sentences)
-    agree = create_true_array(len(sentences))
+
+    st.session_state.agree = create_true_array(len(sentences))
+
+
     with st.container():
         head1, head2 = st.columns([4, 2])
         with head1:
-            st.subheader("사건 정리")
+            st.markdown(
+                '<div class="centered-content"><h3>사건 정리</h3></div>',
+                unsafe_allow_html=True
+            )
         with head2:
-            st.subheader("동의 여부")
+            st.markdown(
+                '<div class="centered-content"><h3>동의 여부</h3></div>',
+                unsafe_allow_html=True
+            )
     with st.container():
         blank, name1, name2 = st.columns([4, 1, 1])
         with blank:
@@ -223,32 +228,34 @@ elif st.session_state.step == 3:
         with st.container():
             col1, blank2, col2, col3 = st.columns([8, 0.8, 2.2, 2])
             with col1:
+                container_class = "custom-container highlight" if st.session_state.get(
+                    f"a_agree_{idx}") and st.session_state.get(f"b_agree_{idx}") else "custom-container"
                 st.markdown(
-                    f'<div class="custom-container">{data}</div>', unsafe_allow_html=True)
+                    f'<div class="{container_class}">{data}</div>', unsafe_allow_html=True)
             with col2:
                 st.markdown('<div class="custom-checkbox">',
                             unsafe_allow_html=True)
                 agree_a = st.checkbox("", key=f"a_agree_{idx}")
                 st.markdown('</div>', unsafe_allow_html=True)
                 if not agree_a:
-                    agree[idx] = False
+                    st.session_state.agree[idx] = False
             with col3:
                 st.markdown('<div class="custom-checkbox">',
                             unsafe_allow_html=True)
                 agree_b = st.checkbox("", key=f"b_agree_{idx}")
                 st.markdown('</div>', unsafe_allow_html=True)
                 if not agree_b:
-                    agree[idx] = False
+                    st.session_state.agree[idx] = False
 
     if st.button("검증 완료"):
-        print(agree)
-        for idx, data in enumerate(agree):
-            if agree[idx]:
+        for idx, data in enumerate(st.session_state.agree):
+            if st.session_state.agree[idx]:
                 st.session_state.verified_sentences.append(sentences[idx])
         st.session_state.step = 4
+
 elif st.session_state.step == 4:
     verified_str = ", ".join(st.session_state.verified_sentences)
-    print(verified_str)
+
     st.write('본 판결서는 판결서 인터넷열람 사이트에서 열람/출력되었습니다. 본 판결서를 이용하여 사건관계인의 명예나 생활의 평온을 해하는 행위는 관련 법령에 따라 금지됩니다.')
     st.markdown("<h1 style='text-align: center;'>연 애 중 앙 지 방 법 원</h1>",
                 unsafe_allow_html=True)
@@ -293,6 +300,7 @@ elif st.session_state.step == 4:
     st.write("  ")
     st.write("  ")
 
+
     response_reason = client.chat.completions.create(
         model="gpt-4",
         messages=[
@@ -320,6 +328,7 @@ elif st.session_state.step == 4:
     st.write("  ")
     st.write("  ")
     st.write("  ")
+
 
     num_male_mistakes = result_reason.count('남자')
     num_female_mistakes = result_reason.count('여자')
@@ -354,7 +363,7 @@ elif st.session_state.step == 4:
             },
             {
                 "role": "system",
-                "content": "판결문에 대한 연인 사이의 간단하고 귀여운 벌칙을 3가지만 만들어주고, '피고인은' 으로 시작해서 '형에 처한다' 라는 양식에 맞게 작성해줘"
+                "content": "판결문에 대한 연인 사이의 간단하고 현실적으로 가능한 귀여운 벌칙을 3가지만 만들어주고, '피고인은' 으로 시작해서 '형에 처한다' 라는 양식에 맞게 작성해줘"
             }
         ]
     )
@@ -372,6 +381,9 @@ st.markdown(
         display: flex;
         align-items: center;
     }
+    .highlight {
+        background-color: lightgreen !important;
+    }
     .custom-checkbox {
         display: flex;
         align-items: center;
@@ -379,6 +391,15 @@ st.markdown(
         width: 100%;
         justify-content: center !important;
     }
+    .stCheckbox span {
+        -webkit-transform: scale(1.3);
+    }
+    .stButton{
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-around;
+    }
+    
     .stButton>button, .stForm button {
         background-color: #FFFFFF;
         color: #FF0056;
@@ -433,10 +454,25 @@ st.markdown(
         background-color: #FEF01B;
         align-self: flex-end;
     }
+
     .profileperson1 {
     }
     .profileperson2 {
         align-self: flex-end;
+    }
+    .centered-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;  /* 컬럼의 높이를 맞추기 위해 필요할 수 있습니다 */
+    }
+    .st-emotion-cache-y2rhx3 {
+        padding: 5px 0 0 0;
+    }
+    .element-container.st-emotion-cache-1aege4m button{
+        margin-top: 2rem;
+        width: 30% !important;
+
     }
     </style>
     """,
