@@ -107,8 +107,14 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+
+
 # Streamlit 앱 레이아웃
-st.markdown("<h1>연문철</h1>", unsafe_allow_html=True)
+# SVG 이미지 표시
+with open("./assets/logo.svg", "r") as f:
+    svg_content = f.read()
+st.markdown(f'<div style="margin-left: 10%; margin-bottom:5%;"align="center">{svg_content}</div>', unsafe_allow_html=True)
+
 st.write("")
 st.write("")
 # 첫 번째 입력 필드 추가 (처음 한 번만 실행)
@@ -120,11 +126,11 @@ if st.session_state.step == 1:
     # 상단에서 첫 번째 사람과 두 번째 사람 이름 입력받기
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        person1_name = st.text_input("피고인1 성명", key="person1_input")
-        person2_name = st.text_input("피고인2 성명", key="person2_input")
+        person1_name = st.text_input("남자 피의자", key="person1_input")
+        person2_name = st.text_input("여자 피의자", key="person2_input")
 
         # '판결 시작하기' 버튼 추가
-        col1, col2, col3 = st.columns([1.5, 2, 1.5])
+        col1, col2, col3 = st.columns([1.75, 2, 1.5])
         with col2:
             if st.button('판결 시작하기'):
                 if person1_name and person2_name:
@@ -149,27 +155,32 @@ elif st.session_state.step == 2:
             col1, col2, col3 = st.columns([2.125, 4, 1])
             with col2:
                 submitted = st.form_submit_button(label='대화 추가하기')
-
-        if submitted:
-            if input_field["text"]:  # 입력된 텍스트가 있을 경우에만 추가
-                idx = len(st.session_state.conversations) + 1
-                st.session_state.conversations.append(
-                    f"{idx}번째 채팅 {input_field['type']} : {input_field['text']}")
-                st.session_state.inputs[0] = {"text": "", "type": ""}
-                st.experimental_rerun()  # 페이지 새로고침
-            else:
-                st.warning("입력된 대화가 없습니다. 대화를 입력해주세요.")
+            if submitted:
+                if input_field["text"]:  # 입력된 텍스트가 있을 경우에만 추가
+                    idx = len(st.session_state.conversations) + 1
+                    st.session_state.conversations.append(
+                        f"{idx}번째 채팅 {input_field['type']} : {input_field['text']}")
+                    st.session_state.inputs[0] = {"text": "", "type": ""}
+                    st.experimental_rerun()  # 페이지 새로고침
+                else:
+                    st.warning("입력된 대화가 없습니다. 대화를 입력해주세요.")
 
     # 저장된 대화 목록 표시
-    st.write("대화 목록:")
     if st.session_state.conversations:
-        for conversation in st.session_state.conversations:
-            st.write(f"{conversation}")
+        conversation_html = '<div class="conversation-container">'
+        for idx, conversation in enumerate(st.session_state.conversations, start=1):
+            person_class = "person1" if st.session_state.person1 in conversation else "person2"
+            conversation_html += f'<div class="fixed-width-auto-height {person_class}">{conversation}</div>'
+        conversation_html += '</div>'
+        st.markdown(conversation_html, unsafe_allow_html=True)
     else:
-        st.write("입력값이 없습니다")
+        st.warning("입력값이 없습니다")
+        
 
-    # UI 초기화 버튼은 폼 외부에 위치
+
+    # UI 초기화 버튼
     ui_reset_button()
+
 elif st.session_state.step == 3:
     # 줄 바꿈을 기준으로 문자열을 분리하여 배열로 저장
     sentences = st.session_state.summary_data.split('\n')
@@ -356,10 +367,10 @@ st.markdown(
         justify-content: center !important;
     }
     .stButton>button, .stForm button {
-        background-color: #4CAF50;
-        color: white;
+        background-color: #FFFFFF;
+        color: #FF0056;
         border-radius: 12px;
-        border: none;
+        border: solid 0.5px #FF0056;
         padding: 5px 10px;  /* 패딩을 조절하여 버튼 크기를 내용물에 맞춤 */
         text-align: center;
         text-decoration: none;
@@ -370,7 +381,35 @@ st.markdown(
         height: auto; /* 높이를 내용물에 맞춤 */
     }
     .stButton>button:hover, .stForm button:hover {
-        background-color: #45a049;
+        background-color: #FF0056;
+        color : #FFFFFF;
+    }
+    @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&display=swap');
+    h1 {
+        font-family: 'Nanum Myeongjo', serif;
+        color: #FF0056;
+        text-align: center;
+    }
+    .conversation-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .fixed-width-auto-height {
+        width: 300px;
+        height: auto;
+        word-wrap: break-word;
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 5px;
+    }
+    .person1 {
+        background-color: lightblue;
+    }
+    .person2 {
+        background-color: lightpink;
+        align-self: flex-end;
     }
     </style>
     """,
