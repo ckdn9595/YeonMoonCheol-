@@ -3,6 +3,7 @@ from openai import OpenAI
 from datetime import date
 import streamlit as st
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
 import re
 
 os.environ["OPENAI_API_KEY"] = st.secrets['API_KEY']
@@ -70,6 +71,7 @@ def ui_verify_button():
             # 여기에 사건 프로프팅 들어가야함 곧 여기서 데이터 세팅
 
 
+
 def summary_prompting(data):
     data_string = ", ".join(data)
     chat_completion = client.chat.completions.create(
@@ -130,8 +132,8 @@ st.markdown(
 with open("./assets/logo.svg", "r") as f:
     svg_content = f.read()
 
-st.markdown(
-    f'<div style="padding: 1em; margin-left: 10%; margin-bottom:5%;"align="center">{svg_content}</div>', unsafe_allow_html=True)
+st.markdown(f'<div style="padding: 1em; margin-left: 10%; margin-bottom:5%;" align="center">{svg_content}</div>', unsafe_allow_html=True)
+
 
 st.write("")
 st.write("")
@@ -158,7 +160,6 @@ if st.session_state.step == 1:
                     st.warning("두 사람의 이름을 입력해주세요.")
 elif st.session_state.step == 2:
     input_field = st.session_state.inputs[0]
-
     with st.form(key='input_form'):
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
@@ -201,6 +202,7 @@ elif st.session_state.step == 3:
         sentences.pop()
 
     st.session_state.agree = create_true_array(len(sentences))
+
 
 
     with st.container():
@@ -338,16 +340,21 @@ elif st.session_state.step == 4:
     percent_male_mistakes = (num_male_mistakes / total_characters) * 100
     percent_female_mistakes = (num_female_mistakes / total_characters) * 100
 
-    labels = ['남자', '여자']
+
+
+
     sizes = [percent_male_mistakes, percent_female_mistakes]
     colors = ['#ff9999', '#66b3ff']
     explode = (0.1, 0)
 
+
     fig1, ax1 = plt.subplots(figsize=(2, 2))
-    ax1.pie(sizes, explode=explode, labels=labels, colors=colors,
+    ax1.pie(sizes, explode=explode, labels=None, colors=colors,
             autopct='%1.1f%%', shadow=True, startangle=90, textprops={'fontsize': 10})
     ax1.axis('equal')
 
+    ax1.legend(labels=['Male', 'Female'], loc="center left", bbox_to_anchor=(1, 0.5), fontsize=10)
+    
     st.subheader('판결 이유에 대한 남자와 여자의 잘못 비율 (%)')
     st.pyplot(fig1)
 
@@ -452,6 +459,12 @@ st.markdown(
     }
     .person2 {
         background-color: #FEF01B;
+        align-self: flex-end;
+    }
+    .profileperson1 {
+    }
+    .profileperson2 {
+
         align-self: flex-end;
     }
 
