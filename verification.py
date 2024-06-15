@@ -4,6 +4,7 @@ from datetime import date
 import streamlit as st
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
+import re
 
 os.environ["OPENAI_API_KEY"] = st.secrets['API_KEY']
 client = OpenAI(
@@ -33,6 +34,12 @@ if 'verified_sentences' not in st.session_state:
 # 1화면
 # 새로운 입력 필드를 추가하는 함수
 
+#채팅 출력용 정규화 함수
+def remove_pattern(text):
+    pattern = r'\d+번째 채팅\s+\S+\s+:'  # 숫자, "번째 채팅", 공백, 이름(공백이 없는 문자열), 공백, 콜론
+    cleaned_text = re.sub(pattern, '', text)
+    return cleaned_text
+
 
 def add_input():
     if 'inputs' not in st.session_state:
@@ -44,15 +51,6 @@ def add_input():
 # 오른쪽 상단에 UI 초기화 버튼 추가
 def ui_reset_button():
     col1, col2, col3 = st.columns([8, 2, 3])
-    with col2:
-        if st.button('검증하기'):
-            print(st.session_state.conversations)
-            with st.spinner("사건 정리중.."):
-                st.session_state.summary_data = summary_prompting(
-                    st.session_state.conversations)
-                st.session_state.step = 3
-
-            # 여기에 사건 프로프팅 들어가야함 곧 여기서 데이터 세팅
     with col3:
         if st.button('🗑️ 대화 내용 초기화'):
             st.session_state.inputs = [{"text": "", "type": ""}]
@@ -60,9 +58,22 @@ def ui_reset_button():
             st.session_state.step = 1  # Reset names_set as well
             st.session_state.person1 = ""
             st.session_state.person2 = ""
-            st.experimental_rerun()  # 페이지 새로고침
 
 
+
+def ui_verify_button():
+    col1, col2, col3 = st.columns([2.25, 2, 1])
+    with col2:
+
+        # 버튼 생성
+        if st.button('검증 하기'):
+            print(st.session_state.conversations)
+            with st.spinner("사건 정리중.."):
+                st.session_state.summary_data = summary_prompting(
+                    st.session_state.conversations)
+                st.session_state.step = 3
+
+            # 여기에 사건 프로프팅 들어가야함 곧 여기서 데이터 세팅
 def summary_prompting(data):
     data_string = ", ".join(data)
     chat_completion = client.chat.completions.create(
@@ -113,7 +124,7 @@ st.markdown(
 # SVG 이미지 표시
 with open("./assets/logo.svg", "r") as f:
     svg_content = f.read()
-st.markdown(f'<div style="margin-left: 10%; margin-bottom:5%;"align="center">{svg_content}</div>', unsafe_allow_html=True)
+st.markdown(f'<div style="padding: 1em; margin-left: 10%; margin-bottom:5%;"align="center">{svg_content}</div>', unsafe_allow_html=True)
 
 st.write("")
 st.write("")
@@ -145,7 +156,7 @@ elif st.session_state.step == 2:
     # 이름이 설정된 경우에만 대화 입력 UI 표시
     # 현재 입력 필드
     input_field = st.session_state.inputs[0]
-
+    
     with st.form(key='input_form'):
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
@@ -165,12 +176,15 @@ elif st.session_state.step == 2:
                 else:
                     st.warning("입력된 대화가 없습니다. 대화를 입력해주세요.")
 
+    
+    ui_reset_button()
     # 저장된 대화 목록 표시
     if st.session_state.conversations:
         conversation_html = '<div class="conversation-container">'
         for idx, conversation in enumerate(st.session_state.conversations, start=1):
+            clean_conversation = remove_pattern(conversation)
             person_class = "person1" if st.session_state.person1 in conversation else "person2"
-            conversation_html += f'<div class="fixed-width-auto-height {person_class}">{conversation}</div>'
+            conversation_html += f'<div class="fixed-width-auto-height {person_class}">{clean_conversation}</div>'
         conversation_html += '</div>'
         st.markdown(conversation_html, unsafe_allow_html=True)
     else:
@@ -178,8 +192,8 @@ elif st.session_state.step == 2:
         
 
 
-    # UI 초기화 버튼
-    ui_reset_button()
+    # 검증하기 버튼
+    ui_verify_button()
 
 elif st.session_state.step == 3:
     # 줄 바꿈을 기준으로 문자열을 분리하여 배열로 저장
@@ -238,6 +252,7 @@ elif st.session_state.step == 3:
 elif st.session_state.step == 4:
     verified_str = ", ".join(st.session_state.verified_sentences)
     print(verified_str)
+    st.write('본 판결서는 판결서 인터넷열람 사이트에서 열람/출력되었습니다. 본 판결서를 이용하여 사건관계인의 명예나 생활의 평온을 해하는 행위는 관련 법령에 따라 금지됩니다.')
     st.markdown("<h1 style='text-align: center;'>연 애 중 앙 지 방 법 원</h1>",
                 unsafe_allow_html=True)
     st.markdown("<h2 style='text-align: center;'></h2>",
@@ -259,7 +274,7 @@ elif st.session_state.step == 4:
     with col1:
         st.write("피 고 인")
     with col2:
-        st.write("남자", "여자")
+        st.write(f"{st.session_state.person1}, {st.session_state.person2}")
 
     with col1:
         st.write("검    사")
@@ -278,6 +293,9 @@ elif st.session_state.step == 4:
         today_str = today.strftime("%Y-%m-%d")
         st.write(today_str)
 
+    st.write("  ")
+    st.write("  ")
+    
     # OpenAI API 호출
     response_reason = client.chat.completions.create(
         model="gpt-4",
@@ -293,6 +311,9 @@ elif st.session_state.step == 4:
         ]
     )
 
+    st.write("  ")
+    st.write("  ")
+    
     st.markdown("<h3 style='text-align: center;'>이           유</h3>",
                 unsafe_allow_html=True)
 
@@ -300,6 +321,11 @@ elif st.session_state.step == 4:
     result_reason = response_reason.choices[0].message.content
     st.write(result_reason)
 
+    st.write("  ")
+    st.write("  ")
+    st.write("  ")
+    st.write("  ")
+    
     # 판결 이유에 대한 남자와 여자의 발생 횟수 카운트
     num_male_mistakes = result_reason.count('남자')
     num_female_mistakes = result_reason.count('여자')
@@ -390,11 +416,20 @@ st.markdown(
         color: #FF0056;
         text-align: center;
     }
+    .st-emotion-cache-ixecyn{
+        border-radius: 1em;
+        border : none;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
     .conversation-container {
         width: 100%;
         display: flex;
+        margin-bottom : 5%;
         flex-direction: column;
         align-items: flex-start;
+        background-color : #9bbbd4;
+        padding : 1em;
+        border-radius : 1em;
     }
     .fixed-width-auto-height {
         width: 300px;
@@ -405,10 +440,10 @@ st.markdown(
         border-radius: 5px;
     }
     .person1 {
-        background-color: lightblue;
+        background-color: #FEF01B;
     }
     .person2 {
-        background-color: lightpink;
+        background-color: #FEF01B;
         align-self: flex-end;
     }
     </style>
