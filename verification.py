@@ -28,6 +28,8 @@ if 'person2' not in st.session_state:
     st.session_state.person2 = ""
 if 'verified_sentences' not in st.session_state:
     st.session_state.verified_sentences = []
+if 'agree' not in st.session_state:
+    st.session_state.agree = []
 
 # if 'summary_data' not in st.session_state:
 #     st.session_state.summary_data = ""
@@ -119,7 +121,6 @@ st.markdown(
 )
 
 
-
 # Streamlit 앱 레이아웃
 # SVG 이미지 표시
 with open("./assets/logo.svg", "r") as f:
@@ -200,18 +201,20 @@ elif st.session_state.step == 3:
     sentences = st.session_state.summary_data.split('\n')
     if sentences and sentences[-1] == '':
         sentences.pop()
-    print(sentences)
-    agree = create_true_array(len(sentences))
-    # datas = ["A가 저번 커플 모임 술자리에서 실수를 함",
-    #          "B가 A에게 다음은 같은 실수를 하지 않도록 약속받음", "A가 다시 실수를 함", "머라고하느냐"]
-    # agree = [True, True, True, True]
+    st.session_state.agree = create_true_array(len(sentences))
 
     with st.container():
         head1, head2 = st.columns([4, 2])
         with head1:
-            st.subheader("사건 정리")
+            st.markdown(
+                '<div class="centered-content"><h3>사건 정리</h3></div>',
+                unsafe_allow_html=True
+            )
         with head2:
-            st.subheader("동의 여부")
+            st.markdown(
+                '<div class="centered-content"><h3>동의 여부</h3></div>',
+                unsafe_allow_html=True
+            )
     with st.container():
         blank, name1, name2 = st.columns([4, 1, 1])
         with blank:
@@ -226,29 +229,31 @@ elif st.session_state.step == 3:
             col1, blank2, col2, col3 = st.columns(
                 [8, 0.8, 2.2, 2])  # 두 개의 컬럼 생성, 비율 3:1
             with col1:
+                container_class = "custom-container highlight" if st.session_state.get(
+                    f"a_agree_{idx}") and st.session_state.get(f"b_agree_{idx}") else "custom-container"
                 st.markdown(
-                    f'<div class="custom-container">{data}</div>', unsafe_allow_html=True)
+                    f'<div class="{container_class}">{data}</div>', unsafe_allow_html=True)
             with col2:
                 st.markdown('<div class="custom-checkbox">',
                             unsafe_allow_html=True)
                 agree_a = st.checkbox("", key=f"a_agree_{idx}")
                 st.markdown('</div>', unsafe_allow_html=True)
                 if not agree_a:
-                    agree[idx] = False
+                    st.session_state.agree[idx] = False
             with col3:
                 st.markdown('<div class="custom-checkbox">',
                             unsafe_allow_html=True)
                 agree_b = st.checkbox("", key=f"b_agree_{idx}")
                 st.markdown('</div>', unsafe_allow_html=True)
                 if not agree_b:
-                    agree[idx] = False
+                    st.session_state.agree[idx] = False
 
     if st.button("검증 완료"):
-        print(agree)
-        for idx, data in enumerate(agree):
-            if agree[idx]:
+        for idx, data in enumerate(st.session_state.agree):
+            if st.session_state.agree[idx]:
                 st.session_state.verified_sentences.append(sentences[idx])
         st.session_state.step = 4
+
 elif st.session_state.step == 4:
     verified_str = ", ".join(st.session_state.verified_sentences)
     print(verified_str)
@@ -365,7 +370,7 @@ elif st.session_state.step == 4:
             },
             {
                 "role": "system",
-                "content": "판결문에 대한 연인 사이의 간단하고 귀여운 벌칙을 3가지만 만들어주고, '피고인은' 으로 시작해서 '형에 처한다' 라는 양식에 맞게 작성해줘"
+                "content": "판결문에 대한 연인 사이의 간단하고 현실적으로 가능한 귀여운 벌칙을 3가지만 만들어주고, '피고인은' 으로 시작해서 '형에 처한다' 라는 양식에 맞게 작성해줘"
             }
         ]
     )
@@ -385,12 +390,26 @@ st.markdown(
         display: flex;
         align-items: center;
     }
+    .highlight {
+        background-color: lightgreen !important;
+    }
     .custom-checkbox {
         display: flex;
         align-items: center;
         height: 100%;
         width: 100%;
         justify-content: center !important;
+    }
+    .stCheckbox span {
+        -webkit-transform: scale(1.3);
+    }
+    .stButton {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-around;
+    }
+    .stButton>button {
+        width: 30% !important;
     }
     .stButton>button, .stForm button {
         background-color: #FFFFFF;
@@ -446,6 +465,16 @@ st.markdown(
         background-color: #FEF01B;
         align-self: flex-end;
     }
+    .centered-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;  /* 컬럼의 높이를 맞추기 위해 필요할 수 있습니다 */
+    }
+    .st-emotion-cache-y2rhx3 {
+        padding: 5px 0 0 0
+    }
+    
     </style>
     """,
     unsafe_allow_html=True
