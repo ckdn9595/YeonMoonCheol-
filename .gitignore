@@ -1,6 +1,7 @@
 # .venv 디렉토리와 그 하위 파일들 무시
 .venv/
 .venv/*
+ymc
 
 # 다른 예시들
 *.toml
