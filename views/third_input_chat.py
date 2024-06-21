@@ -66,7 +66,7 @@ def summary_prompting(data):
     result = "예시용 문자 데이터"
     return result
 
-def display_page2():
+def display_page3():
     with open("./assets/logo.svg", "r") as f:
         svg_content = f.read()
 

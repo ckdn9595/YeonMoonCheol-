@@ -24,6 +24,9 @@ def apply_styles():
         .right-image {
             right: 0;
         }
+        .st-emotion-cache-1f8d91x  {
+            margin-top: 10%;
+        }
         .custom-container {
             background-color: #FFE6E6;
             padding: 10px;
@@ -91,12 +94,15 @@ def apply_styles():
             border-radius: 1em;
         }
         .fixed-width-auto-height {
-            width: 300px;
+            width: 90%;
             height: auto;
             word-wrap: break-word;
             padding: 10px;
             margin-bottom: 5px;
             border-radius: 5px;
+        }
+        .st-emotion-cache-1v0mbdj{
+            width : 100%;
         }
         .person1 {
             background-color: #FEF01B;
@@ -130,6 +136,16 @@ def apply_styles():
             margin-top: 2rem;
             width: 30% !important;
 
+        }
+        //판결문 상단 div
+        .st-emotion-cache-ocqkz7{
+            width : 100%;
+        }
+        .big-font{
+            font-size : 1em;
+            @media screen and (max-width: 768px) {
+                font-size : 0.8em;   
+            }
         }
         </style>
         """,
