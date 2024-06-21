@@ -37,31 +37,33 @@ def ui_verify_button():
         with st.spinner("사건 정리중.."):
             st.session_state.summary_data = summary_prompting(
                 st.session_state.conversations)
-            st.session_state.step = 3
+            st.session_state.step = 4
 
 
 def summary_prompting(data):
     data_string = ", ".join(data)
-    chat_completion = client.chat.completions.create(
-        messages=[
-            {
-                "role": "user",
-                "content": f"{data_string}",
-            },
-            {
-                "role": "system",
-                "content": """
-                    입력된 데이터는 ([순서]번째 채팅 [주체] : [주체가 전송한 문자내용]) 형식이야.
-                    대화에는 두 명의 주체가 있는데, 이 둘은 커플이야.
-                    위 커플의 대화를 읽고, 잘못한 상황들을 예시와 같이 객관적으로!! 요약해줘.
-                    중요: 각 요약이 문장의 글자 수가 30글자를 넘기지 말 것.
-                    예시: "여자가 남자의 휴대폰을 마음대로 가져가서 검사했습니다.
-                    """,
-            }
-        ],
-        model="gpt-4o",
-    )
-    result = chat_completion.choices[0].message.content
+    ## open api 사용 시 주석 풀기
+    # chat_completion = client.chat.completions.create(
+    #     messages=[
+    #         {
+    #             "role": "user",
+    #             "content": f"{data_string}",
+    #         },
+    #         {
+    #             "role": "system",
+    #             "content": """
+    #                 입력된 데이터는 ([순서]번째 채팅 [주체] : [주체가 전송한 문자내용]) 형식이야.
+    #                 대화에는 두 명의 주체가 있는데, 이 둘은 커플이야.
+    #                 위 커플의 대화를 읽고, 잘못한 상황들을 예시와 같이 객관적으로!! 요약해줘.
+    #                 중요: 각 요약이 문장의 글자 수가 30글자를 넘기지 말 것.
+    #                 예시: "여자가 남자의 휴대폰을 마음대로 가져가서 검사했습니다.
+    #                 """,
+    #         }
+    #     ],
+    #     model="gpt-4o",
+    # )
+    # result = chat_completion.choices[0].message.content
+    result = "예시용 문자 데이터"
     return result
 
 def display_page2():
