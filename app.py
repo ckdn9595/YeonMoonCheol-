@@ -1,33 +1,29 @@
-import os
-from openai import OpenAI
+
 import streamlit as st
+from utils.session_state import initialize_session_state
+from utils.styles import apply_styles
+from views.first_input_names import display_page1
+from views.second_input_chat import display_page2
+# from views.third_choose_option import display_page3
+from views.fourth_verification import display_page4
+from views.fifth_judgment import display_page5
 
-os.environ["OPENAI_API_KEY"] = st.secrets['API_KEY']
-
-client = OpenAI(
-    api_key=os.environ.get("OPENAI_API_KEY"),
-)
 
 
-st.title('시나리오 봇')
+# 세션 상태 초기화
+initialize_session_state()
 
-keyword = st.text_input("키워드 입력")
+# 전역 스타일 설정
+apply_styles()
 
-if (st.button('생성하기')):
-    with st.spinner("생성중입니다.."):
-        chat_completion = client.chat.completions.create(
-            messages=[
-                {
-                    "role": "user",
-                    "content": f"{keyword}",
-                },
-                {
-                    "role": "system",
-                    "content": "입력 받은 문장을 일본어로 번역해줘",
-                }
-            ],
-            model="gpt-4o",
-        )
-    
-    result = chat_completion.choices[0].message.content
-    st.write(result)
+# Load the appropriate step module
+if st.session_state.step == 1:
+    display_page1()
+elif st.session_state.step == 2:
+    display_page2()
+# elif st.session_state.step == 3: # 옵션 선택 부분 추후 추가
+#     display_page3()
+elif st.session_state.step == 4:
+    display_page4()
+elif st.session_state.step == 5:
+    display_page5()

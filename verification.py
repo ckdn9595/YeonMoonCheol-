@@ -68,8 +68,6 @@ def ui_verify_button():
                 st.session_state.conversations)
             st.session_state.step = 3
 
-            # 여기에 사건 프로프팅 들어가야함 곧 여기서 데이터 세팅
-
 
 
 def summary_prompting(data):
