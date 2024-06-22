@@ -3,7 +3,7 @@ import streamlit as st
 
 def initialize_session_state():
     if 'inputs' not in st.session_state:
-        st.session_state.inputs = [{"text": "", "type": ""}]
+        st.session_state.inputs = {"text": "", "type": ""}
 
     if 'conversations' not in st.session_state:
         st.session_state.conversations = []
