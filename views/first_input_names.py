@@ -23,6 +23,6 @@ def display_page1():
                     st.session_state.step = 2
                     st.session_state.person1 = person1_name
                     st.session_state.person2 = person2_name
-                    st.experimental_rerun()
+                    st.rerun()
                 else:
                     st.warning("두 사람의 이름을 입력해주세요.")

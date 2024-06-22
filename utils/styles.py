@@ -99,16 +99,16 @@ def apply_styles():
             border-radius: 5px;
         }
         .person1 {
-            background-color: #FEF01B;
+            background-color: #FFE6E6;
         }
         .person2 {
-            background-color: #FEF01B;
+            background-color: #FFE6E6;
             align-self: flex-end;
         }
         .profileperson1 {
         }
         .profileperson2 {
-
+            text-align: right;
             align-self: flex-end;
         }
 
@@ -130,6 +130,22 @@ def apply_styles():
             margin-top: 2rem;
             width: 30% !important;
 
+        }
+        .scrollable-container {
+            max-height: 400px;
+            overflow-y: scroll;
+            padding-right: 15px; /* 스크롤바가 콘텐츠를 가리지 않도록 패딩 추가 */
+        }
+        .st-emotion-cache-mv56re.e1f1d6gn0 {
+            
+        }
+        div[data-testid="column"].st-emotion-cache-ytkq5y.e1f1d6gn3 {
+            padding: 30px 0px 0px 10px;
+        }
+        .person2_container {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
         }
         </style>
         """,
