@@ -147,6 +147,14 @@ def apply_styles():
             flex-direction: row;
             justify-content: flex-end;
         }
+        div[data-testid="toastContainer"] div[role="alert"] {
+            background-color: #FFE6E6;
+            width: fit-content;
+        }
+        div[data-testid="toastContainer"] {
+            display: flex;
+            align-items: center;
+        }
          //판결문 상단 div
         .st-emotion-cache-ocqkz7{
             width : 100%;
@@ -161,7 +169,3 @@ def apply_styles():
         """,
         unsafe_allow_html=True
     )
-
-        
-        
-    
