@@ -18,6 +18,7 @@ def display_page1():
         person2_name = st.text_input("여자 피의자", key="person2_input")
         col1, col2, col3 = st.columns([1.75, 2, 1.5])
         with col2:
+            
             if st.button('판결 시작하기'):
                 if person1_name and person2_name:
                     st.session_state.step = 2
@@ -26,3 +27,4 @@ def display_page1():
                     st.rerun()
                 else:
                     st.warning("두 사람의 이름을 입력해주세요.")
+

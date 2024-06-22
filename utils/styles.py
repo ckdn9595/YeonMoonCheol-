@@ -155,6 +155,16 @@ def apply_styles():
             display: flex;
             align-items: center;
         }
+         //판결문 상단 div
+        .st-emotion-cache-ocqkz7{
+            width : 100%;
+        }
+        .big-font{
+            font-size : 1em;
+            @media screen and (max-width: 768px) {
+                font-size : 0.8em;   
+            }
+        }
         </style>
         """,
         unsafe_allow_html=True

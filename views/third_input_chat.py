@@ -112,7 +112,7 @@ def clear_text2():
     else:
         st.warning("입력된 대화가 없습니다. 대화를 입력해주세요.")
 
-def display_page2():
+def display_page3():
     with open("./assets/logo.svg", "r") as f:
         svg_content = f.read()
 
