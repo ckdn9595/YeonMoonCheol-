@@ -23,8 +23,8 @@ def initialize_session_state():
     if 'agree' not in st.session_state:
         st.session_state.agree = []
         
-    if 'ocr_result' not in st.session_state:
-        st.session_state.ocr_result = []
+    if 'ocr_input' not in st.session_state:
+        st.session_state.ocr_input = []
         
     if 'uploaded_files' not in st.session_state:
         st.session_state.uploaded_files = []    

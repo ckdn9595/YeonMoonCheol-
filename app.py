@@ -6,6 +6,7 @@ from views.first_input_names import display_page1
 from views.second_choose_option import display_page2
 from views.third_input_chat import display_page3
 from views.third_second_ocr_chat import display_page3_2
+from views.third_third_ocr_text import display_page3_3
 from views.fourth_verification import display_page4
 from views.fifth_judgment import display_page5
 
@@ -26,6 +27,8 @@ elif st.session_state.step == 3:
     display_page3()
 elif st.session_state.step == 3.2: 
     display_page3_2()
+elif st.session_state.step == 3.3:
+    display_page3_3()
 elif st.session_state.step == 4:
     display_page4()
 elif st.session_state.step == 5:

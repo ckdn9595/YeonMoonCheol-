@@ -6,6 +6,16 @@ def create_true_array(size):
 
 
 def display_page4():
+    with open("./assets/logo.svg", "r") as f:
+        svg_content = f.read()
+
+    st.markdown(
+        f'<div style="padding: 1em; margin-left: 10%; margin-bottom:5%;" align="center">{svg_content}</div>', unsafe_allow_html=True
+    )
+
+    st.write("")
+    st.write("")
+    
     sentences = st.session_state.summary_data.split('\n')
     if sentences and sentences[-1] == '':
         sentences.pop()
