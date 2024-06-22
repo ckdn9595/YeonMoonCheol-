@@ -165,6 +165,11 @@ def apply_styles():
                 font-size : 0.8em;   
             }
         }
+        .small-subheader {
+            font-size: 1.5em; /* 폰트 크기를 조정합니다. 원하는 크기로 변경하세요. */
+            margin-top: 0;
+            margin-bottom: 0.5em;
+        }
         </style>
         """,
         unsafe_allow_html=True

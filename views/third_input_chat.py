@@ -45,14 +45,22 @@ def remove_pattern(text):
     return cleaned_text
 
 
-def ui_verify_button():
-    if st.button('검증 하기'):
+def ui_verify_button_separate():
+    if st.button('아니요 따로 있어요.'):
+        with st.spinner("사건 정리중.."):
+            st.session_state.summary_data = summary_prompting(
+                st.session_state.conversations)
+            st.session_state.step = 4.2
+            st.rerun()
+
+
+def ui_verify_button_together():
+    if st.button('네 같이 있어요.'):
         with st.spinner("사건 정리중.."):
             st.session_state.summary_data = summary_prompting(
                 st.session_state.conversations)
             st.session_state.step = 4
             st.rerun()
-
 
 def summary_prompting(data):
     data_string = ", ".join(data)
@@ -99,8 +107,7 @@ def clear_text1():
         st.session_state["text"] = ""
     else:
         st.toast("입력된 대화가 없습니다. 대화를 입력해주세요.", icon="🚨")
-        #st.warning("입력된 대화가 없습니다. 대화를 입력해주세요.")
-        
+        # st.warning("입력된 대화가 없습니다. 대화를 입력해주세요.")
 
 
 def clear_text2():
@@ -110,7 +117,8 @@ def clear_text2():
             f"{idx}번째 채팅 {st.session_state.person2} : {st.session_state['text']}")
         st.session_state["text"] = ""
     else:
-        st.warning("입력된 대화가 없습니다. 대화를 입력해주세요.")
+        st.toast("입력된 대화가 없습니다. 대화를 입력해주세요.", icon="🚨")
+
 
 def display_page3():
     with open("./assets/logo.svg", "r") as f:
@@ -137,7 +145,6 @@ def display_page3():
             with col3:
                 st.form_submit_button(
                     label=st.session_state.person2, on_click=clear_text2)
-                    
 
     ui_edit_button()
     if st.session_state.conversations:
@@ -177,5 +184,12 @@ def display_page3():
     else:
         st.warning("입력값이 없습니다")
 
-    if not st.session_state.get('edit_mode', False):
-        ui_verify_button()
+    if not st.session_state.get('edit_mode', False) and st.session_state.conversations:
+        # 작은 부제목을 표시합니다.
+        st.markdown('<div class="small-subheader">연인과 같이 계신가요?</div>',
+            unsafe_allow_html=True)
+        col1, col2, col3, col4 = st.columns([2, 2, 2, 2])
+        with col2:
+            ui_verify_button_together()
+        with col3:
+            ui_verify_button_separate()
