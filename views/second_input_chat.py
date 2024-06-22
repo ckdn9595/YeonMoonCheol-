@@ -55,7 +55,6 @@ def ui_verify_button():
 
 
 def summary_prompting(data):
-    print(data)
     data_string = ", ".join(data)
     # open api 사용 시 주석 풀기
     # chat_completion = client.chat.completions.create(
@@ -92,6 +91,27 @@ def handle_delete_selected():
     st.rerun()
 
 
+def clear_text1():
+    if st.session_state["text"]:
+        idx = len(st.session_state.conversations) + 1
+        st.session_state.conversations.append(
+            f"{idx}번째 채팅 {st.session_state.person1} : {st.session_state['text']}")
+        st.session_state["text"] = ""
+    else:
+        st.toast("입력된 대화가 없습니다. 대화를 입력해주세요.", icon="🚨")
+        #st.warning("입력된 대화가 없습니다. 대화를 입력해주세요.")
+        
+
+
+def clear_text2():
+    if st.session_state["text"]:
+        idx = len(st.session_state.conversations) + 1
+        st.session_state.conversations.append(
+            f"{idx}번째 채팅 {st.session_state.person2} : {st.session_state['text']}")
+        st.session_state["text"] = ""
+    else:
+        st.warning("입력된 대화가 없습니다. 대화를 입력해주세요.")
+
 def display_page2():
     with open("./assets/logo.svg", "r") as f:
         svg_content = f.read()
@@ -111,29 +131,13 @@ def display_page2():
             input_field_value = st.text_input("대화 입력", key="text")
             col1, col2, col3, col4 = st.columns([2, 2, 2, 2])
             with col2:
-                submitted1 = st.form_submit_button(
-                    label=st.session_state.person1)
-                if submitted1:
-                    if input_field_value:
-                        idx = len(st.session_state.conversations) + 1
-                        st.session_state.conversations.append(
-                            f"{idx}번째 채팅 {st.session_state.person1} : {input_field_value}")
-                        input_field_value = ""
-                        st.rerun()
-                    else:
-                        st.warning("입력된 대화가 없습니다. 대화를 입력해주세요.")
+                st.form_submit_button(
+                    label=st.session_state.person1, on_click=clear_text1)
+
             with col3:
-                submitted2 = st.form_submit_button(
-                    label=st.session_state.person2)
-                if submitted2:
-                    if input_field_value:
-                        idx = len(st.session_state.conversations) + 1
-                        st.session_state.conversations.append(
-                            f"{idx}번째 채팅 {st.session_state.person2} : {input_field_value}")
-                        input_field_value = ""
-                        st.rerun()
-                    else:
-                        st.warning("입력된 대화가 없습니다. 대화를 입력해주세요.")
+                st.form_submit_button(
+                    label=st.session_state.person2, on_click=clear_text2)
+                    
 
     ui_edit_button()
     if st.session_state.conversations:
