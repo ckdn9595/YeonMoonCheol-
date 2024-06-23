@@ -69,7 +69,7 @@ def get_server_url(uuid):
         deploy_url = "https://yeonmooncheollove.streamlit.app"
         # 로컬 url
         local_url = "http://localhost:8501"
-        return f"{local_url}/?casenum={uuid}"
+        return f"{deploy_url}/?casenum={uuid}"
     except Exception as e:
         st.error(f"Error: {e}")
         return None
