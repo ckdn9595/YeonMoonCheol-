@@ -1,3 +1,4 @@
+import streamlit as st
 import sqlite3
 
 # SQLite 연결 생성 함수
