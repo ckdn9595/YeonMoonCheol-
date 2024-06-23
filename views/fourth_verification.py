@@ -67,8 +67,11 @@ def display_page4():
                     st.session_state.agree[idx] = False
 
     if st.button("검증 완료"):
-        for idx, data in enumerate(st.session_state.agree):
-            if st.session_state.agree[idx]:
-                st.session_state.verified_sentences.append(sentences[idx])
-        st.session_state.step = 5
-        st.rerun()
+        if not any(st.session_state.agree):
+            st.toast("적어도 하나의 사건은 선택을 해야합니다.", icon="🚨")
+        else:
+            for idx, data in enumerate(st.session_state.agree):
+                if st.session_state.agree[idx]:
+                    st.session_state.verified_sentences.append(sentences[idx])
+            st.session_state.step = 5
+            st.rerun()

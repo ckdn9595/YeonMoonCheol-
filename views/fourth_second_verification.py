@@ -97,7 +97,7 @@ def display_page4_2():
 
     st.write("")
     st.write("")
-    st.session_state.summary_data = "여자는 남자에게 욕을 했다.\n 남자가 화가 나서 주먹을 휘둘렀다."
+    #st.session_state.summary_data = "여자는 남자에게 욕을 했다.\n 남자가 화가 나서 주먹을 휘둘렀다."
     sentences = st.session_state.summary_data.split('\n')
     if sentences and sentences[-1] == '':
         sentences.pop()
