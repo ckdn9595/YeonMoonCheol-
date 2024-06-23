@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 def display_page2():
     with open("./assets/logo.svg", "r") as f:
         svg_content = f.read()
@@ -11,17 +12,17 @@ def display_page2():
     st.write("")
     st.write("")
 
-    col1, col2, col3 = st.columns([3,1,3]) 
-    
+    col1, col2, col3 = st.columns([3, 1, 3])
+
     with col1:
         if st.button('대화 내용 사진 업로드'):
-            st.session_state.step = 3.2  #이후 다른 step으로 이동 
-            st.experimental_rerun()
-            
+            st.session_state.step = 3.2  # 이후 다른 step으로 이동
+            st.rerun()
+
     with col3:
         if st.button('대화 내용 직접 입력'):
-            st.session_state.step = 3   
-            st.experimental_rerun()
+            st.session_state.step = 3
+            st.rerun()
 
 
 st.markdown(
