@@ -4,7 +4,9 @@ import os
 import re
 import json
 from openai import OpenAI
-import streamlit.components.v1 as components
+from views.third_input_chat import ui_verify_button_separate
+from views.third_input_chat import ui_verify_button_together
+from views.third_input_chat import summary_prompting
 
 os.environ["OPENAI_API_KEY"] = st.secrets['API_KEY']
 client = OpenAI(
@@ -22,7 +24,6 @@ def remove_pattern(text):
     if isinstance(text, list):
         text = ' '.join(text)
     cleaned_text = re.sub(pattern, '', text)
-    cleaned_text = cleaned_text.strip('{}').strip()
     return cleaned_text
 
 def ocr_prompting():
@@ -36,12 +37,13 @@ def ocr_prompting():
                     [
                     {"type": "text", 
                         "text": 
-                        """
+                        f"""
                         텍스트 형시은 대화체 한글 텍스트, 이모티콘, 줄바꿈, 다양한 글자 크기 및 서체가 포함되어있어
                         그리고 대화에는 두 명의 주체가 있는데, 이 둘은 커플이야.
                         이미지 데이터를 ([순서]번째 채팅 [주체] : [주체가 전송한 문자내용]) 형식으로 변환해줘.
                         예시: (1번째 채팅 김여자 : "너가 먼저 늦었잖아")
-                        이름이 없는 대화창은 '나'가 보낸걸로 해줘
+                        화면 기준 오른쪽 대화창은 {st.session_state.send_person}를 주체로 해주고,
+                        화면 기준 왼쪽 대화창은 {st.session_state.receive_person}를 주체로 해줘
                         추가로 데이터 결과는 아래 예시와 같이 보내줘
                         1번째 채팅 김여자 : 너가 먼저 늦었잖아
                         ...
@@ -56,44 +58,10 @@ def ocr_prompting():
     result = result.strip().split('\n')
     for msg in result:
         st.session_state.conversations.append(msg)
-
+    st.session_state.conversations = [item for item in st.session_state.conversations if item]
+        
     return result
 
-
-def summary_prompting(data):
-    data_string = ", ".join(data)
-    # open api 사용 시 주석 풀기
-    # chat_completion = client.chat.completions.create(
-    #     messages=[
-    #         {
-    #             "role": "user",
-    #             "content": f"{data_string}",
-    #         },
-    #         {
-    #             "role": "system",
-    #             "content": """
-    #                 입력된 데이터는 ([순서]번째 채팅 [주체] : [주체가 전송한 문자내용]) 형식이야.
-    #                 대화에는 두 명의 주체가 있는데, 이 둘은 커플이야.
-    #                 위 커플의 대화를 읽고, 잘못한 상황들을 예시와 같이 객관적으로!! 요약해줘.
-    #                 중요: 각 요약이 문장의 글자 수가 30글자를 넘기지 말 것.
-    #                 예시: "여자가 남자의 휴대폰을 마음대로 가져가서 검사했습니다.
-    #                 """,
-    #         }
-    #     ],
-    #     model="gpt-4o",
-    # )
-    # result = chat_completion.choices[0].message.content
-    result = "예시용 문자 데이터"
-    return result
-
-
-def verify_button():
-    if st.button('검증 하기'):
-        with st.spinner("사건 정리중.."):
-            st.session_state.summary_data = summary_prompting(
-                st.session_state.conversations)
-            st.session_state.step = 4
-            st.rerun()
 
 
 def display_page3_3():
@@ -108,10 +76,12 @@ def display_page3_3():
     st.write("")
 
     if st.session_state.ocr_input:
+        st.write("")
         ocr_prompting()
-        #세션 상태 출력
-        st.write("현재 세션 상태:")
-        st.json(st.session_state)
+        
+        # 세션 상태 출력
+        # st.write("현재 세션 상태:")
+        # st.json(st.session_state)
         
         #채팅 출력
         with st.container(height=500, border=True):
@@ -134,10 +104,8 @@ def display_page3_3():
                     st.markdown(
                         f'''
                             <div class="{person_class}_container">
-                                <div>
                                     <div class="profile{person_class}">{name}</div>
                                     <div class="fixed-width-auto-height {person_class}">{clean_conversation}</div>
-                                </div>
                             </div>
                         ''',
                         unsafe_allow_html=True
@@ -145,4 +113,11 @@ def display_page3_3():
     else:
         st.warning("입력값이 없습니다")
 
-    verify_button()
+    # 작은 부제목을 표시합니다.
+    st.markdown('<div class="small-subheader">연인과 같이 계신가요?</div>',
+        unsafe_allow_html=True)
+    col1, col2, col3, col4 = st.columns([2, 2, 2, 2])
+    with col2:
+        ui_verify_button_together()
+    with col3:
+        ui_verify_button_separate()
