@@ -121,7 +121,7 @@ def display_page4_2():
     with st.container():
         blank, name1 = st.columns([5, 1])
         with blank:
-            st.subheader("")
+            st.write("")
 
     for idx, data in enumerate(sentences):
         with st.container():
