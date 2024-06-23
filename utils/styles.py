@@ -122,7 +122,6 @@ def apply_styles():
         .profile person2 {
             text-align: right;
         }
-
         .centered-content {
             display: flex;
             justify-content: center;

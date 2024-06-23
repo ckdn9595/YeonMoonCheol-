@@ -37,3 +37,9 @@ def initialize_session_state():
         
     if 'param_agree_list' not in st.session_state:
         st.session_state.param_agree_list = ""
+        
+    if 'send_person' not in st.session_state:
+        st.session_state.send_person = ""
+        
+    if 'receive_person' not in st.session_state:
+        st.session_state.receive_person = ""

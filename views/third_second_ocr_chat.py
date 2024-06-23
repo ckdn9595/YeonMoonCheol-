@@ -1,4 +1,3 @@
-import cv2
 from PIL import Image, ImageDraw
 import base64
 import streamlit as st
@@ -14,7 +13,7 @@ client = OpenAI(
 
 
 def file_uploader():
-    uploaded_files = st.file_uploader("대화 내용 사진을 업로드해주세요!()", accept_multiple_files=True, type=["png", "jpg", "jpeg"])
+    uploaded_files = st.file_uploader("대화 내용 사진을 업로드해주세요!", accept_multiple_files=True, type=["png", "jpg", "jpeg"])
     if uploaded_files is not None:
         pil_images = []
         encoded_images = []
@@ -28,11 +27,19 @@ def file_uploader():
             st.session_state.ocr_input.append(encoded_images)
     
 
-def ocr_page_button():
-    if st.button('대화 내용 추출하기'):
-        with st.spinner("추출 중.."):
-            st.session_state.step = 3.3
-            st.rerun()
+def ocr_page_button_m():
+    if st.button(f'당신이 {st.session_state.person1}인가요?'):
+        st.session_state.send_person = st.session_state.person1
+        st.session_state.receive_person = st.session_state.person2
+        st.session_state.step = 3.3
+        st.rerun()
+
+def ocr_page_button_f():
+    if st.button(f'당신이 {st.session_state.person2}인가요?'):
+        st.session_state.send_person = st.session_state.person2
+        st.session_state.receive_person = st.session_state.person1
+        st.session_state.step = 3.3
+        st.rerun()
 
 
 def display_page3_2():
@@ -46,8 +53,12 @@ def display_page3_2():
     st.write("")
     st.write("")
 
-    st.write("사진의 우측 대화가 본인이 보낸 메시지로 인식됩니다!")
+    st.write("사진의 우측 대화가 본인이 보낸 메시지로 인식됩니다! -> 메시지를 보낸 사람의 화면을 캡처해주세요!")
     file_uploader()
 
     if st.session_state.ocr_input:
-        ocr_page_button()
+        _, col1, col2, col3, _ = st.columns([1, 3, 1, 3, 1])
+        with col1:
+            ocr_page_button_m()
+        with col3:
+            ocr_page_button_f()
