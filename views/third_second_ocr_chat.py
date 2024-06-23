@@ -32,9 +32,7 @@ def ocr_page_button():
     if st.button('대화 내용 추출하기'):
         with st.spinner("추출 중.."):
             st.session_state.step = 3.3
-            st.experimental_rerun()
-
-
+            st.rerun()
 
 
 def display_page3_2():
@@ -50,9 +48,6 @@ def display_page3_2():
 
     st.write("사진의 우측 대화가 본인이 보낸 메시지로 인식됩니다!")
     file_uploader()
-    
+
     if st.session_state.ocr_input:
         ocr_page_button()
-    
-
-

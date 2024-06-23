@@ -16,6 +16,7 @@ def extract_name(chat_message):
     name = name_part.split('채팅')[-1].strip()
     return name
 
+
 def remove_pattern(text):
     pattern = r'\d+번째 채팅\s+\S+\s+:'
     if isinstance(text, list):
@@ -59,7 +60,6 @@ def ocr_prompting():
     return result
 
 
-
 def summary_prompting(data):
     data_string = ", ".join(data)
     # open api 사용 시 주석 풀기
@@ -90,10 +90,10 @@ def summary_prompting(data):
 def verify_button():
     if st.button('검증 하기'):
         with st.spinner("사건 정리중.."):
-            st.session_state.summary_data = summary_prompting(st.session_state.conversations)
+            st.session_state.summary_data = summary_prompting(
+                st.session_state.conversations)
             st.session_state.step = 4
-            st.experimental_rerun()
-                
+            st.rerun()
 
 
 def display_page3_3():
@@ -106,8 +106,7 @@ def display_page3_3():
 
     st.write("")
     st.write("")
-    
-    
+
     if st.session_state.ocr_input:
         ocr_prompting()
         #세션 상태 출력
@@ -146,5 +145,4 @@ def display_page3_3():
     else:
         st.warning("입력값이 없습니다")
 
-        
     verify_button()
