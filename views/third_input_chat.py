@@ -60,7 +60,7 @@ def ui_verify_button_together():
             st.session_state.summary_data = summary_prompting(
                 st.session_state.conversations)
             st.session_state.step = 4
-            st.rerun()
+            st.experimental_rerun()
 
 def summary_prompting(data):
     data_string = ", ".join(data)
@@ -99,12 +99,13 @@ def handle_delete_selected():
     st.rerun()
 
 
-def clear_text1():
+def clear_text(person, person_class):
     if st.session_state["text"]:
         idx = len(st.session_state.conversations) + 1
         st.session_state.conversations.append(
-            f"{idx}번째 채팅 {st.session_state.person1} : {st.session_state['text']}")
+            f"{idx}번째 채팅 {person} : {st.session_state['text']}###{person_class}")
         st.session_state["text"] = ""
+        
     else:
         st.toast("입력된 대화가 없습니다. 대화를 입력해주세요.", icon="🚨")
         # st.warning("입력된 대화가 없습니다. 대화를 입력해주세요.")
@@ -130,18 +131,14 @@ def display_page3():
 
     st.write("")
     st.write("")
-
     with st.form(key='input_form'):
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            # input_field["type"] = st.radio(
-            #     "사람 선택", [st.session_state.person1, st.session_state.person2], key="type")
             input_field_value = st.text_input("대화 입력", key="text")
             col1, col2, col3, col4 = st.columns([2, 2, 2, 2])
             with col2:
                 st.form_submit_button(
-                    label=st.session_state.person1, on_click=clear_text1)
-
+                    label=st.session_state.person1, on_click=lambda: clear_text(st.session_state.person1, "person1"))
             with col3:
                 st.form_submit_button(
                     label=st.session_state.person2, on_click=clear_text2)
@@ -150,9 +147,9 @@ def display_page3():
     if st.session_state.conversations:
         with st.container(height=500, border=True):
             for idx, conversation in enumerate(st.session_state.conversations, start=1):
-                clean_conversation = remove_pattern(conversation)
-                name = extract_name(conversation)
-                person_class = "person1" if st.session_state.person1 in conversation else "person2"
+                conv, person_class = conversation.split("###")
+                clean_conversation = remove_pattern(conv)
+                name = extract_name(conv)
                 cols = st.columns([1, 8, 1])
                 with cols[0]:
                     if st.session_state.get('edit_mode', False):
@@ -161,18 +158,13 @@ def display_page3():
                             st.session_state.selected_conversations.append(idx)
                         else:
                             if idx in st.session_state.selected_conversations:
-                                st.session_state.selected_conversations.remove(
-                                    idx)
+                                st.session_state.selected_conversations.remove(idx)
                 with cols[1]:
-
                     st.markdown(
-
                         f'''
                             <div class="{person_class}_container">
-                                <div>
-                                    <div class="profile{person_class}">{name}</div>
+                                    <div class="profile {person_class}">{name}</div>
                                     <div class="fixed-width-auto-height {person_class}">{clean_conversation}</div>
-                                </div>
                             </div>
                         ''',
                         unsafe_allow_html=True
