@@ -66,7 +66,7 @@ def get_server_url(uuid):
     try:
 
         # 배포시 url
-        deploy_url = "https://yeonmooncheolai.streamlit.app"
+        deploy_url = "https://yeonmooncheollove.streamlit.app"
         # 로컬 url
         local_url = "http://localhost:8501"
         return f"{local_url}/?casenum={uuid}"
