@@ -12,40 +12,40 @@ client = OpenAI(
 
 
 def judgement(verified_str):
-    # response_reason = client.chat.completions.create(
-    #     model="gpt-4",
-    #     messages=[
-    #         {
-    #             "role": "user",
-    #             "content": f"{verified_str}"
-    #         },
-    #         {
-    #             "role": "system",
-    #             "content": "입력 받은 내용에 대한 연애전문가로서, 남자와 여자의 싸움의 판결문을 원만히 화해가 되도록 300자 이내로 작성해줘"
-    #         }
-    #     ]
-    # )
-    # result_reason = response_reason.choices[0].message.content
-    result_reason = "에시용 판결 이유이다................................."
+    response_reason = client.chat.completions.create(
+        model="gpt-4",
+        messages=[
+            {
+                "role": "user",
+                "content": f"{verified_str}"
+            },
+            {
+                "role": "system",
+                "content": "입력 받은 내용에 대한 연애전문가로서, 남자와 여자의 싸움의 판결문을 원만히 화해가 되도록 300자 이내로 작성해줘"
+            }
+        ]
+    )
+    result_reason = response_reason.choices[0].message.content
+    # result_reason = "에시용 판결 이유이다................................."
     return result_reason
 
 
 def conclusion(verified_str):
-    # response_instruction = client.chat.completions.create(
-    #     model="gpt-4",
-    #     messages=[
-    #         {
-    #             "role": "user",
-    #             "content": f"{verified_str}"
-    #         },
-    #         {
-    #             "role": "system",
-    #             "content": "판결문에 대한 연인 사이의 간단하고 현실적으로 가능한 귀여운 벌칙을 3가지만 만들어주고, '피고인은' 으로 시작해서 '형에 처한다' 라는 양식에 맞게 작성해줘"
-    #         }
-    #     ]
-    # )
-    # result_instruction = response_instruction.choices[0].message.content
-    result_instruction = "예시용 결론이다..............................."
+    response_instruction = client.chat.completions.create(
+        model="gpt-4",
+        messages=[
+            {
+                "role": "user",
+                "content": f"{verified_str}"
+            },
+            {
+                "role": "system",
+                "content": "판결문에 대한 연인 사이의 간단하고 현실적으로 가능한 귀여운 벌칙을 3가지만 만들어주고, '피고인은' 으로 시작해서 '형에 처한다' 라는 양식에 맞게 작성해줘"
+            }
+        ]
+    )
+    result_instruction = response_instruction.choices[0].message.content
+    # result_instruction = "예시용 결론이다..............................."
     return result_instruction
     
 def display_page5():

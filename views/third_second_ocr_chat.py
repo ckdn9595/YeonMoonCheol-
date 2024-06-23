@@ -10,24 +10,21 @@ client = OpenAI(
 )
 
 
-
-
 def file_uploader():
-    uploaded_files = st.file_uploader("대화 내용 사진을 업로드해주세요!", accept_multiple_files=True ,type=["png", "jpg", "jpeg"])
+    uploaded_files = st.file_uploader(
+        "대화 내용 사진을 업로드해주세요!", accept_multiple_files=True, type=["png", "jpg", "jpeg"])
     if uploaded_files is not None:
         st.session_state.ocr_input = uploaded_files
     else:
         st.session_state.uploaded_files = []
         st.session_state.ocr_result = []
-    
+
 
 def ocr_page_button():
     if st.button('대화 내용 추출하기'):
         with st.spinner("추출 중.."):
             st.session_state.step = 3.3
-            st.experimental_rerun()
-
-
+            st.rerun()
 
 
 def display_page3_2():
@@ -42,9 +39,6 @@ def display_page3_2():
     st.write("")
 
     file_uploader()
-    
+
     if st.session_state.ocr_input:
         ocr_page_button()
-    
-
-

@@ -4,8 +4,12 @@ import streamlit as st
 def create_true_array(size):
     return [True] * size
 
+def parse_boolean_string(s):
+    return [True if char == 'T' else False for char in s.split(',')]
 
-def display_page4():
+def display_page4_3():
+    param_agree_list = parse_boolean_string(st.session_state.param_agree_list)
+    
     with open("./assets/logo.svg", "r") as f:
         svg_content = f.read()
 
@@ -39,9 +43,9 @@ def display_page4():
         with blank:
             st.subheader("")
         with name1:
-            st.write(st.session_state.person1)
+            st.write("연인")
         with name2:
-            st.write(st.session_state.person2)
+            st.write("나")
 
     for idx, data in enumerate(sentences):
         with st.container():
@@ -54,7 +58,8 @@ def display_page4():
             with col2:
                 st.markdown('<div class="custom-checkbox">',
                             unsafe_allow_html=True)
-                agree_a = st.checkbox("", key=f"a_agree_{idx}")
+                agree_a = st.checkbox(
+                    "", key=f"a_agree_{idx}", value=param_agree_list[idx], disabled=True)
                 st.markdown('</div>', unsafe_allow_html=True)
                 if not agree_a:
                     st.session_state.agree[idx] = False
@@ -73,5 +78,7 @@ def display_page4():
             for idx, data in enumerate(st.session_state.agree):
                 if st.session_state.agree[idx]:
                     st.session_state.verified_sentences.append(sentences[idx])
+            print(st.session_state.verified_sentences)
             st.session_state.step = 5
             st.rerun()
+            
