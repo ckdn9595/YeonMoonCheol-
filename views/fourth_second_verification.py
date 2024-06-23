@@ -42,9 +42,10 @@ def send_summary_dialog(link):
         font-size: 1.1em;
     }}
     .copy-button {{
-        background-color: #4CAF50;
-        color: white;
-        border: none;
+        background-color: #FFFFFF;
+        color: #FF0056;
+        border-radius: 12px;
+        border: solid 0.5px #FF0056;
         padding: 10px 20px;
         text-align: center;
         text-decoration: none;
@@ -52,7 +53,6 @@ def send_summary_dialog(link):
         font-size: 16px;
         margin: 4px 2px;
         cursor: pointer;
-        border-radius: 5px;
     }}
     </style>
     """

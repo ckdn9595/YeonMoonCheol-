@@ -39,7 +39,7 @@ def display_page4_3():
                 unsafe_allow_html=True
             )
     with st.container():
-        blank, name1, name2 = st.columns([4, 1, 1])
+        blank, name1, name2 = st.columns([4, 1.1, 0.9])
         with blank:
             st.subheader("")
         with name1:
