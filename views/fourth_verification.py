@@ -71,3 +71,4 @@ def display_page4():
             if st.session_state.agree[idx]:
                 st.session_state.verified_sentences.append(sentences[idx])
         st.session_state.step = 5
+        st.rerun()

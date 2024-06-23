@@ -20,17 +20,22 @@ initialize_session_state()
 # 전역 스타일 설정
 apply_styles()
 
-# URL 쿼리 파라미터를 가져옵니다.
-query_data = st.query_params
-if 'casenum' in query_data:
-    casenum = st.query_params.casenum  # key랑 매칭
-    # 특정 쿼리 파라미터 값을 가져옵니다. 여기서는 'name' 파라미터를 예로 들겠습니다.
-    # 가져온 값을 사용하여 페이지에 표시합니다.
-    st.write(f'Hello, {casenum}!')
-    cur = db.init()
-    cur = db.read(cur, casenum)
-    for row in cur:
-        print(row)
+if st.session_state.step == 1:
+    # URL 쿼리 파라미터를 가져옵니다. 전달된 값이 있다면 바로 4_3단계 진입
+    query_data = st.query_params
+    if 'casenum' in query_data:
+        casenum = st.query_params.casenum  # key랑 매칭
+        # 특정 쿼리 파라미터 값을 가져옵니다. 여기서는 'name' 파라미터를 예로 들겠습니다.
+        # 가져온 값을 사용하여 페이지에 표시합니다.
+        cur = db.init()
+        result = db.read(casenum)
+        uuid, summary, agree_list, person1, person2 = result
+        st.session_state.person1 = person1
+        st.session_state.person2 = person2
+        st.session_state.summary_data = summary
+        st.session_state.param_agree_list = agree_list
+        st.session_state.step = 4.3
+    
     
 
     # TODO 여기왔다는건 4.3단계라는 것 4.3을 알맞게 연결한다.

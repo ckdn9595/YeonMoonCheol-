@@ -154,7 +154,7 @@ def display_page4_2():
                 # uuid, sentences, agreeList, person1, person2
 
                 # 데이터베이스에 값을 알맞게 넣어준다.
-                db.insert(cur, str(uuid4), st.session_state.summary_data, boolean_str(
+                db.insert(str(uuid4), st.session_state.summary_data, boolean_str(
                     st.session_state.agree), st.session_state.person1, st.session_state.person2)
                 link_url = get_server_url(uuid4)
                 send_summary_dialog(link_url)

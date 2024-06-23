@@ -34,3 +34,6 @@ def initialize_session_state():
         
     if 'case_num_uid' not in st.session_state:
         st.session_state.case_num_uid = ""
+        
+    if 'param_agree_list' not in st.session_state:
+        st.session_state.param_agree_list = ""
