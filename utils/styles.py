@@ -75,6 +75,9 @@ def apply_styles():
             color: #FF0056;
             text-align: center;
         }
+        .st-emotion-cache-35qgtp{
+            margin-bottom : 0.5rem;
+        }
         .st-emotion-cache-ixecyn {
             border-radius: 1em;
             border: none;
@@ -90,33 +93,36 @@ def apply_styles():
             padding: 1em;
             border-radius: 1em;
         }
-        .fixed-width-auto-height {
-            width: 300px;
+        .fixed-width-auto-height.person1 {
+            width: 80%;
             height: auto;
             word-wrap: break-word;
             padding: 10px;
             margin-bottom: 5px;
             border-radius: 5px;
+            background-color: #FFE6E6;
+        }
+        .fixed-width-auto-height.person2 {
+            width: 80%;
+            height: auto;
+            word-wrap: break-word;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            background-color: #FFE6E6;
         }
         .person1 {
-            background-color: #FFE6E6;
+            
         }
         .person2 {
-            background-color: #FFE6E6;
-            align-self: flex-end;
+            float : right;
         }
         .profileperson1 {
         }
-        .profileperson2 {
+        .profile person2 {
             text-align: right;
-            align-self: flex-end;
         }
 
-        .profileperson1 {
-        }
-        .profileperson2 {
-            align-self: flex-end;
-        }
         .centered-content {
             display: flex;
             justify-content: center;
@@ -136,16 +142,14 @@ def apply_styles():
             overflow-y: scroll;
             padding-right: 15px; /* 스크롤바가 콘텐츠를 가리지 않도록 패딩 추가 */
         }
-        .st-emotion-cache-mv56re.e1f1d6gn0 {
-            
-        }
         div[data-testid="column"].st-emotion-cache-ytkq5y.e1f1d6gn3 {
             padding: 30px 0px 0px 10px;
         }
         .person2_container {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-end;
+            display : flex;
+            flex-direction : column;
+            align-items : flex-end;
+            width:100%;
         }
         div[data-testid="toastContainer"] div[role="alert"] {
             background-color: #FFE6E6;
