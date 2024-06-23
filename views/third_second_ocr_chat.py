@@ -53,7 +53,7 @@ def display_page3_2():
     st.write("")
     st.write("")
 
-    st.write("사진의 우측 대화가 본인이 보낸 메시지로 인식됩니다! -> 메시지를 보낸 사람의 화면을 캡처해주세요!")
+    st.write("대화 사진의 우측 말풍선이 본인이 보낸 메시지로 인식됩니다!")
     file_uploader()
 
     if st.session_state.ocr_input:

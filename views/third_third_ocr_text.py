@@ -58,8 +58,7 @@ def ocr_prompting():
     result = result.strip().split('\n')
     for msg in result:
         st.session_state.conversations.append(msg)
-    if "" in st.session_state.conversations:
-        st.session_state.conversations = [item for item in st.session_state.conversations if item]
+    st.session_state.conversations = [item for item in st.session_state.conversations if item]
         
     return result
 
@@ -77,10 +76,12 @@ def display_page3_3():
     st.write("")
 
     if st.session_state.ocr_input:
+        st.write("")
         ocr_prompting()
-        #세션 상태 출력
-        st.write("현재 세션 상태:")
-        st.json(st.session_state)
+        
+        # 세션 상태 출력
+        # st.write("현재 세션 상태:")
+        # st.json(st.session_state)
         
         #채팅 출력
         with st.container(height=500, border=True):
@@ -113,10 +114,10 @@ def display_page3_3():
         st.warning("입력값이 없습니다")
 
     # 작은 부제목을 표시합니다.
-        st.markdown('<div class="small-subheader">연인과 같이 계신가요?</div>',
-            unsafe_allow_html=True)
-        col1, col2, col3, col4 = st.columns([2, 2, 2, 2])
-        with col2:
-            ui_verify_button_together()
-        with col3:
-            ui_verify_button_separate()
+    st.markdown('<div class="small-subheader">연인과 같이 계신가요?</div>',
+        unsafe_allow_html=True)
+    col1, col2, col3, col4 = st.columns([2, 2, 2, 2])
+    with col2:
+        ui_verify_button_together()
+    with col3:
+        ui_verify_button_separate()
