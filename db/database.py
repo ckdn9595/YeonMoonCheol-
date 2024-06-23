@@ -1,10 +1,17 @@
-import streamlit as st
+import os
 import sqlite3
+import streamlit as st
 
 # SQLite 연결 생성 함수
+
 @st.experimental_singleton
 def get_connection():
-    return sqlite3.connect('./main.db', check_same_thread=False)
+    # 데이터베이스 파일이 존재하지 않는 경우 생성
+    if not os.path.exists('main.db'):
+        open('main.db', 'a').close()
+        os.chmod('main.db', 0o666)  # 파일 권한 설정
+
+    return sqlite3.connect('main.db', check_same_thread=False)
 
 # 데이터베이스 초기화
 
