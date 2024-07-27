@@ -12,6 +12,7 @@ client = OpenAI(
 
 
 def judgement(verified_str):
+    print(verified_str)
     response_reason = client.chat.completions.create(
         model="gpt-4",
         messages=[
@@ -21,7 +22,7 @@ def judgement(verified_str):
             },
             {
                 "role": "system",
-                "content": "입력 받은 내용에 대한 연애전문가로서, 남자와 여자의 싸움의 판결문을 원만히 화해가 되도록 300자 이내로 작성해줘"
+                "content": "입력 받은 내용에 대한 연애전문가로서, 남자와 여자의 싸움의 판결문을 원만히 화해가 되도록 300자 이내로 작성해줘."
             }
         ]
     )
@@ -47,7 +48,8 @@ def conclusion(verified_str):
     result_instruction = response_instruction.choices[0].message.content
     # result_instruction = "예시용 결론이다..............................."
     return result_instruction
-    
+
+
 def display_page5():
     verified_str = ", ".join(st.session_state.verified_sentences)
 
@@ -57,27 +59,30 @@ def display_page5():
     st.markdown("<h3 style='text-align: center;'>판결</h3>",
                 unsafe_allow_html=True)
 
-    col1, col2, col3 = st.columns([1,1,1])
+    col1, col2, col3 = st.columns([1, 1, 1])
 
     with col1:
         st.markdown('<p class="big-font">사 건</p>', unsafe_allow_html=True)
     with col3:
-        st.markdown('<p class="big-font">2024 연애교통법위반(연인갈등)</p>', unsafe_allow_html=True)
+        st.markdown('<p class="big-font">2024 연애교통법위반(연인갈등)</p>',
+                    unsafe_allow_html=True)
 
     with col1:
         st.markdown('<p class="big-font">피 고 인</p>', unsafe_allow_html=True)
     with col3:
-        st.write(f"{st.session_state.person1}, {st.session_state.person2}")
+        st.write(f"{st.session_state.receiver}, {st.session_state.sender}")
 
     with col1:
         st.markdown('<p class="big-font">검 사</p>', unsafe_allow_html=True)
     with col3:
-        st.markdown('<p class="big-font">연문철(검사직무대리, 기소) 연명원(공판)</p>', unsafe_allow_html=True)
+        st.markdown('<p class="big-font">연문철(검사직무대리, 기소) 연명원(공판)</p>',
+                    unsafe_allow_html=True)
 
     with col1:
         st.markdown('<p class="big-font">변 호 인</p>', unsafe_allow_html=True)
     with col3:
-        st.markdown('<p class="big-font">법무법인(연애의 참견) 담당변호사 연문철</p>', unsafe_allow_html=True)
+        st.markdown('<p class="big-font">법무법인(연애의 참견) 담당변호사 연문철</p>',
+                    unsafe_allow_html=True)
 
     with col1:
         st.markdown('<p class="big-font">판결선고</p>', unsafe_allow_html=True)
@@ -88,7 +93,6 @@ def display_page5():
 
     st.write("  ")
     st.write("  ")
-
 
     st.write("  ")
     st.write("  ")
@@ -122,7 +126,7 @@ def display_page5():
     ax1.axis('equal')
 
     ax1.legend(labels=['Male', 'Female'], loc="center left",
-            bbox_to_anchor=(1, 0.5), fontsize=10)
+               bbox_to_anchor=(1, 0.5), fontsize=10)
 
     st.subheader('판결 이유에 대한 남자와 여자의 잘못 비율 (%)')
     st.pyplot(fig1)
@@ -130,5 +134,5 @@ def display_page5():
     st.markdown("<h3 style='text-align: center;'>결           론</h3>",
                 unsafe_allow_html=True)
 
-    result_instruction =conclusion(verified_str)
+    result_instruction = conclusion(verified_str)
     st.write(result_instruction)

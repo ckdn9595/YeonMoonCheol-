@@ -97,7 +97,7 @@ def display_page4_2():
 
     st.write("")
     st.write("")
-    #st.session_state.summary_data = "여자는 남자에게 욕을 했다.\n 남자가 화가 나서 주먹을 휘둘렀다."
+    # st.session_state.summary_data = "여자는 남자에게 욕을 했다.\n 남자가 화가 나서 주먹을 휘둘렀다."
     sentences = st.session_state.summary_data.split('\n')
     if sentences and sentences[-1] == '':
         sentences.pop()
@@ -151,11 +151,11 @@ def display_page4_2():
                 uuid4 = uuid.uuid4()
 
                 # 먼저 데이터베이스를 설계한다. 판결문은 매번 새로 만든다.
-                # uuid, sentences, agreeList, person1, person2
+                # uuid, sentences, agreeList, receiver, sender
 
                 # 데이터베이스에 값을 알맞게 넣어준다.
                 db.insert(str(uuid4), st.session_state.summary_data, boolean_str(
-                    st.session_state.agree), st.session_state.person1, st.session_state.person2)
+                    st.session_state.agree), st.session_state.receiver, st.session_state.sender)
                 link_url = get_server_url(uuid4)
                 send_summary_dialog(link_url)
                 st.session_state.case_num_uid = uuid4

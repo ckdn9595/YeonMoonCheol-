@@ -11,9 +11,9 @@ client = OpenAI(
 )
 
 
-
 def file_uploader():
-    uploaded_files = st.file_uploader("대화 내용 사진을 업로드해주세요!", accept_multiple_files=True, type=["png", "jpg", "jpeg"])
+    uploaded_files = st.file_uploader(
+        "대화 내용 사진을 업로드해주세요!", accept_multiple_files=True, type=["png", "jpg", "jpeg"])
     if uploaded_files is not None:
         pil_images = []
         encoded_images = []
@@ -22,22 +22,23 @@ def file_uploader():
             pil_images.append(pil_image)
             buffered = io.BytesIO()
             pil_image.save(buffered, format="PNG")
-            encoded_image = base64.b64encode(buffered.getvalue()).decode('utf-8')
+            encoded_image = base64.b64encode(
+                buffered.getvalue()).decode('utf-8')
             encoded_images.append(encoded_image)
             st.session_state.ocr_input.append(encoded_images)
-    
+
 
 def ocr_page_button_m():
-    if st.button(f'당신이 {st.session_state.person1}인가요?'):
-        st.session_state.send_person = st.session_state.person1
-        st.session_state.receive_person = st.session_state.person2
+    if st.button(f'당신이 {st.session_state.receiver}인가요?'):
+        memo = st.session_state.sender
+        st.session_state.sender = st.session_state.receiver
+        st.session_state.receiver = memo
         st.session_state.step = 3.3
         st.rerun()
 
+
 def ocr_page_button_f():
-    if st.button(f'당신이 {st.session_state.person2}인가요?'):
-        st.session_state.send_person = st.session_state.person2
-        st.session_state.receive_person = st.session_state.person1
+    if st.button(f'당신이 {st.session_state.sender}인가요?'):
         st.session_state.step = 3.3
         st.rerun()
 

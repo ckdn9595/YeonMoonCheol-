@@ -62,6 +62,7 @@ def ui_verify_button_together():
             st.session_state.step = 4
             st.rerun()
 
+
 def summary_prompting(data):
     data_string = ", ".join(data)
     # open api 사용 시 주석 풀기
@@ -74,17 +75,19 @@ def summary_prompting(data):
             {
                 "role": "system",
                 "content": """
-                    입력된 데이터는 ([순서]번째 채팅 [주체] : [주체가 전송한 문자내용]) 형식이야.
+                    입력된 데이터는 ([주체]:[주체가 전송한 문자내용]) 형식이야.
                     대화에는 두 명의 주체가 있는데, 이 둘은 커플이야.
-                    위 커플의 대화를 읽고, 잘못한 상황들을 예시와 같이 객관적으로!! 요약해줘.
-                    중요: 각 요약이 문장의 글자 수가 30글자를 넘기지 말 것.
-                    예시: "여자가 남자의 휴대폰을 마음대로 가져가서 검사했습니다.
+                    위 커플의 대화를 읽고, 커플이란 특수한 관계성을 반영해서 잘못한 상황들을 예시와 같이 객관적으로!! 요약해줘.
+                    중요: 각 요약이 문장의 글자 수가 40글자를 넘기지 말 것.
+                    예시: 남자가 여자의 서운한 마음을 이해하지 못했습니다.
+                    출력 형식 : 단순 문자열로 제공할 것, 목록 형식이 아님.
                     """,
             }
         ],
         model="gpt-4o",
     )
     result = chat_completion.choices[0].message.content
+    print(result)
     # result = "예시용 문자 데이터"
     return result
 
@@ -103,7 +106,7 @@ def clear_text1():
     if st.session_state["text"]:
         idx = len(st.session_state.conversations) + 1
         st.session_state.conversations.append(
-            f"{idx}번째 채팅 {st.session_state.person1} : {st.session_state['text']}")
+            f"{idx}번째 채팅 {st.session_state.receiver} : {st.session_state['text']}")
         st.session_state["text"] = ""
     else:
         st.toast("입력된 대화가 없습니다. 대화를 입력해주세요.", icon="🚨")
@@ -114,7 +117,7 @@ def clear_text2():
     if st.session_state["text"]:
         idx = len(st.session_state.conversations) + 1
         st.session_state.conversations.append(
-            f"{idx}번째 채팅 {st.session_state.person2} : {st.session_state['text']}")
+            f"{idx}번째 채팅 {st.session_state.sender} : {st.session_state['text']}")
         st.session_state["text"] = ""
     else:
         st.toast("입력된 대화가 없습니다. 대화를 입력해주세요.", icon="🚨")
@@ -135,16 +138,16 @@ def display_page3():
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             # input_field["type"] = st.radio(
-            #     "사람 선택", [st.session_state.person1, st.session_state.person2], key="type")
+            #     "사람 선택", [st.session_state.receiver, st.session_state.sender], key="type")
             input_field_value = st.text_input("대화 입력", key="text")
             col1, col2, col3, col4 = st.columns([2, 2, 2, 2])
             with col2:
                 st.form_submit_button(
-                    label=st.session_state.person1, on_click=clear_text1)
+                    label=st.session_state.receiver, on_click=clear_text1)
 
             with col3:
                 st.form_submit_button(
-                    label=st.session_state.person2, on_click=clear_text2)
+                    label=st.session_state.sender, on_click=clear_text2)
 
     ui_edit_button()
     if st.session_state.conversations:
@@ -152,7 +155,7 @@ def display_page3():
             for idx, conversation in enumerate(st.session_state.conversations, start=1):
                 clean_conversation = remove_pattern(conversation)
                 name = extract_name(conversation)
-                person_class = "person1" if st.session_state.person1 in conversation else "person2"
+                person_class = "receiver" if st.session_state.receiver in conversation else "sender"
                 cols = st.columns([1, 8, 1])
                 with cols[0]:
                     if st.session_state.get('edit_mode', False):
@@ -185,7 +188,7 @@ def display_page3():
     if not st.session_state.get('edit_mode', False) and st.session_state.conversations:
         # 작은 부제목을 표시합니다.
         st.markdown('<div class="small-subheader">연인과 같이 계신가요?</div>',
-            unsafe_allow_html=True)
+                    unsafe_allow_html=True)
         col1, col2, col3, col4 = st.columns([2, 2, 2, 2])
         with col2:
             ui_verify_button_together()

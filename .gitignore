@@ -3,6 +3,7 @@
 .venv/*
 ymc
 *.toml
+*.pyc
 
 # Ignore all __pycache__ directories in the repository
 __pycache__/

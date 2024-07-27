@@ -15,7 +15,7 @@ def display_page4():
 
     st.write("")
     st.write("")
-    
+
     sentences = st.session_state.summary_data.split('\n')
     if sentences and sentences[-1] == '':
         sentences.pop()
@@ -39,9 +39,9 @@ def display_page4():
         with blank:
             st.subheader("")
         with name1:
-            st.write(st.session_state.person1)
+            st.write(st.session_state.receiver)
         with name2:
-            st.write(st.session_state.person2)
+            st.write(st.session_state.sender)
 
     for idx, data in enumerate(sentences):
         with st.container():

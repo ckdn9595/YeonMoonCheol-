@@ -93,7 +93,7 @@ def apply_styles():
             padding: 1em;
             border-radius: 1em;
         }
-        .fixed-width-auto-height.person1 {
+        .fixed-width-auto-height.receiver {
             width: 80%;
             height: auto;
             word-wrap: break-word;
@@ -102,7 +102,7 @@ def apply_styles():
             border-radius: 5px;
             background-color: #FFE6E6;
         }
-        .fixed-width-auto-height.person2 {
+        .fixed-width-auto-height.sender {
             width: 80%;
             height: auto;
             word-wrap: break-word;
@@ -111,15 +111,15 @@ def apply_styles():
             border-radius: 5px;
             background-color: #FFE6E6;
         }
-        .person1 {
+        .receiver {
             
         }
-        .person2 {
+        .sender {
             float : right;
         }
-        .profileperson1 {
+        .profilereceiver {
         }
-        .profile person2 {
+        .profile sender {
             text-align: right;
         }
         .centered-content {
@@ -144,7 +144,7 @@ def apply_styles():
         div[data-testid="column"].st-emotion-cache-ytkq5y.e1f1d6gn3 {
             padding: 30px 0px 0px 10px;
         }
-        .person2_container {
+        .sender_container {
             display : flex;
             flex-direction : column;
             align-items : flex-end;
