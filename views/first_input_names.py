@@ -10,20 +10,13 @@ def display_page1():
     )
 
     st.write("")
-    st.write("")
 
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        receiver_name = st.text_input("남자 피의자", key="receiver_input")
-        sender_name = st.text_input("여자 피의자", key="sender_input")
-        col1, col2, col3 = st.columns([1.75, 2, 1.5])
-        with col2:
+        st.markdown('<p style="font-size : 1em; font-weight : 700; text-align: center;"> 연문철 새로운 버전이 출시됐습니다! <br/> 아래 링크 혹은 버튼을 눌러 이동해주세요!</p>', unsafe_allow_html=True)
+        st.markdown('<p style="text-align: center;"><a href="https://yeonmuncheol.site/" target="_blank">https://yeonmuncheol.site/</a></p>', unsafe_allow_html=True)
 
-            if st.button('판결 시작하기'):
-                if receiver_name and sender_name:
-                    st.session_state.step = 2
-                    st.session_state.receiver = receiver_name
-                    st.session_state.sender = sender_name
-                    st.rerun()
-                else:
-                    st.warning("두 사람의 이름을 입력해주세요.")
+    with col2:
+        if st.button('정식 버전으로 이동하기'):
+            st.markdown(
+                '<meta http-equiv="refresh" content="0; url=https://yeonmuncheol.site/" />', unsafe_allow_html=True)
