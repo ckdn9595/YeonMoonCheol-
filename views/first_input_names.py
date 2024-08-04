@@ -17,6 +17,5 @@ def display_page1():
         st.markdown('<p style="text-align: center;"><a href="https://yeonmuncheol.site/" target="_blank">https://yeonmuncheol.site/</a></p>', unsafe_allow_html=True)
 
     with col2:
-        if st.button('정식 버전으로 이동하기'):
-            st.markdown(
-                '<meta http-equiv="refresh" content="0; url=https://yeonmuncheol.site/" />', unsafe_allow_html=True)
+        st.page_link("https://yeonmuncheol.site/", label="정식 버전으로 이동하기")
+        

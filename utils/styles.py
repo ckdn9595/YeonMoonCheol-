@@ -173,6 +173,15 @@ def apply_styles():
             margin-top: 0;
             margin-bottom: 0.5em;
         }
+        .stPageLink div {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+        .stPageLink div a {
+            padding: 0.3rem 2rem;
+            background-color: #FFE6E6;
+        }
         </style>
         """,
         unsafe_allow_html=True
